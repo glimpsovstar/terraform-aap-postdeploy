@@ -94,6 +94,13 @@ inventory and host are really created and that the named workflow template resol
 controller; firing a workflow at a host that does not exist would fail for reasons that say
 nothing about this module.
 
+## Publishing
+
+This module uses **branch-based publishing** in HCP Terraform, not tags. A version is
+published by nominating a commit on `main`, which lets HCP Terraform run the module's tests
+before the version exists. Repository tags are kept for human reference but no longer drive
+publication.
+
 ## Examples
 
 - [`examples/basic`](examples/basic) — register a host and run post-deployment
