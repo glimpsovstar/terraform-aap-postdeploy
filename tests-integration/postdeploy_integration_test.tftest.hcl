@@ -11,6 +11,11 @@
 # host are really created; firing a workflow at a host that does not exist
 # would fail for reasons that say nothing about this module.
 
+# A module must not configure its own provider, so the integration run
+# configures it here. Credentials come from AAP_HOST / AAP_USERNAME /
+# AAP_PASSWORD in the environment.
+provider "aap" {}
+
 variables {
   inventory_name        = "tftest-integration"
   inventory_description = "Created by terraform test, safe to delete"

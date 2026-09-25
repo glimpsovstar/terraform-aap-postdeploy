@@ -1,0 +1,57 @@
+# Integration tests against a real AAP controller. Manual trigger only.
+#
+# These create a real inventory and host. They run with run_post_deploy = false
+# (set in the test file), so no workflow is fired at a host that does not exist.
+#
+# Requires three repository secrets, which are NOT set automatically:
+#   AAP_HOST      e.g. https://aap.example.com
+#   AAP_USERNAME
+#   AAP_PASSWORD
+
+name: integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      host_ansible_host:
+        description: Address recorded on the test host (never connected to)
+        required: false
+        default: 10.0.0.10
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required secrets
+        run: |
+          missing=0
+          for s in AAP_HOST AAP_USERNAME AAP_PASSWORD; do
+            if [ -z "${!s}" ]; then echo "::error::secret $s is not set"; missing=1; fi
+          done
+          exit $missing
+        env:
+          AAP_HOST: ${{ secrets.AAP_HOST }}
+          AAP_USERNAME: ${{ secrets.AAP_USERNAME }}
+          AAP_PASSWORD: ${{ secrets.AAP_PASSWORD }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Init
+        run: terraform init -backend=false
+
+      - name: Integration tests
+        env:
+          AAP_HOST: ${{ secrets.AAP_HOST }}
+          AAP_USERNAME: ${{ secrets.AAP_USERNAME }}
+          AAP_PASSWORD: ${{ secrets.AAP_PASSWORD }}
+          AAP_INSECURE_SKIP_VERIFY: "true"
+        run: |
+          terraform test -test-directory=tests-integration \
+            -var="host_ansible_host=${{ inputs.host_ansible_host }}"
