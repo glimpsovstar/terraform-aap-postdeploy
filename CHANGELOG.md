@@ -3,6 +3,22 @@
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning is
 [semantic](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-09-25
+
+### Added
+
+- Integration tests in `tests-integration/` (`apply` mode) asserting the inventory and host
+  are really created on a controller and that the named workflow template resolves.
+- Unit coverage for `wait_for_completion = false`, custom workflow template name, custom
+  organization, inventory description, trigger input contents, `retrigger` merge semantics,
+  and the `post_deploy_enabled` output.
+- CI now validates every directory under `examples/`.
+
+### Changed
+
+- Test files renamed to the `*_unit_test.tftest.hcl` convention.
+- Unit tests grew from 8 to 15.
+
 ## [1.0.0] - 2026-09-25
 
 ### Added

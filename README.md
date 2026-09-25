@@ -70,14 +70,29 @@ creates is ignored.
 **`wait_for_completion = true` is deliberate.** A post-deployment that fails should fail the
 apply rather than leaving a half-configured host reported as success.
 
-## Development
+## Testing
+
+| | Location | Mode | Count | Needs a controller |
+|---|---|---|---|---|
+| Unit | `tests/` | `plan` + `mock_provider` | 15 | no |
+| Integration | `tests-integration/` | `apply` | 3 | **yes** |
 
 ```bash
 terraform fmt -check -recursive
 terraform init -backend=false && terraform validate
 tflint --recursive
-terraform test          # 8 tests, mock_provider, no AAP controller needed
+
+# Unit - what CI runs. No controller, nothing created.
+terraform test
+
+# Integration - creates a real inventory and host.
+terraform test -test-directory=tests-integration -var=host_ansible_host=10.0.0.10
 ```
+
+Integration tests run with `run_post_deploy = false` throughout. They exist to prove the
+inventory and host are really created and that the named workflow template resolves on the
+controller; firing a workflow at a host that does not exist would fail for reasons that say
+nothing about this module.
 
 ## Examples
 
