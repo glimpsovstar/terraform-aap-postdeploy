@@ -3,6 +3,16 @@
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning is
 [semantic](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-25
+
+### Added
+
+- `extra_vars`, passed through to the workflow, with `_hosts = "all"` merged in by default.
+  `4-validation.yml` declares `hosts: "{{ _hosts | default(omit) }}"` and without it matches
+  no hosts at all — reporting success while testing nothing, which is how a broken
+  application produced a green workflow.
+- `extra_vars` output, and tests covering the default and caller overrides (17 unit tests).
+
 ## [1.1.0] - 2026-09-25
 
 ### Added

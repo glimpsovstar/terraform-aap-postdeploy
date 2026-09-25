@@ -77,6 +77,12 @@ variable "wait_timeout_seconds" {
   }
 }
 
+variable "extra_vars" {
+  description = "Extra variables passed to the workflow. Some playbooks require them: 4-validation.yml declares hosts as \"{{ _hosts | default(omit) }}\" and silently matches nothing - reporting success without testing anything - unless _hosts is supplied."
+  type        = map(string)
+  default     = {}
+}
+
 variable "retrigger" {
   description = "Arbitrary values that re-fire the workflow when changed. Use it to re-run post-deployment without rebuilding the host."
   type        = map(string)

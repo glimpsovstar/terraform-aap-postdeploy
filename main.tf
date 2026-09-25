@@ -31,6 +31,7 @@ action "aap_workflow_job_launch" "post_deploy" {
     inventory_id                        = aap_inventory.this.id
     wait_for_completion                 = var.wait_for_completion
     wait_for_completion_timeout_seconds = var.wait_timeout_seconds
+    extra_vars                          = jsonencode(local.extra_vars)
   }
 }
 

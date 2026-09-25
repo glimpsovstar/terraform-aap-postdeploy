@@ -110,3 +110,33 @@ run "post_deploy_enabled_output_reflects_the_setting" {
     error_message = "The output must tell callers whether post-deployment is wired."
   }
 }
+
+run "hosts_defaults_to_all_so_validation_matches_something" {
+  command = plan
+
+  assert {
+    condition     = output.extra_vars["_hosts"] == "all"
+    error_message = "Without _hosts, 4-validation.yml matches no hosts and passes without testing anything."
+  }
+}
+
+run "caller_extra_vars_are_merged_and_can_override" {
+  command = plan
+
+  variables {
+    extra_vars = {
+      message = "Home Affairs demo"
+      _hosts  = "web"
+    }
+  }
+
+  assert {
+    condition     = output.extra_vars["message"] == "Home Affairs demo"
+    error_message = "Caller extra_vars must reach the workflow."
+  }
+
+  assert {
+    condition     = output.extra_vars["_hosts"] == "web"
+    error_message = "A caller must be able to override the _hosts default."
+  }
+}

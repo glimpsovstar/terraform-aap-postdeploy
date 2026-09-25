@@ -22,3 +22,8 @@ output "post_deploy_enabled" {
   description = "Whether the post-deployment workflow is wired to fire."
   value       = var.run_post_deploy
 }
+
+output "extra_vars" {
+  description = "Extra variables passed to the workflow, including the _hosts default."
+  value       = local.extra_vars
+}
